@@ -4,12 +4,15 @@ import HelloWorld from '@/components/HelloWorld'
 
 Vue.use(Router)
 
+
+const index = () => import('@/views/index')
+
 export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'index',
+      component: index
     }
   ]
 })

@@ -1,0 +1,302 @@
+<template>
+  <div>
+      <el-container>
+        <el-header>
+            <el-row>
+                <el-col :span="1">
+                    <a href="javascripot:;" class="logo"></a>
+                </el-col>
+                <el-col :span="8" :offset="15">
+                     <el-menu :default-active="activeIndex2" class="el-menu-demo"
+                mode="horizontal"  background-color="#fff"
+                text-color="#fff"
+                active-text-color="#538cc4">
+                <el-menu-item index="index">首页</el-menu-item>
+            </el-menu>
+                </el-col>
+            </el-row>
+        </el-header>
+        <el-main>
+            <el-row>
+                <el-col :span="6" :offset="6">
+                    <el-tabs v-model="activeName" @tab-click="handleClick">
+                        <el-tab-pane label="注册" name="register">
+                             <div class="register">
+                                <el-form :model="ruleFormRegister" :rules="rules" ref="ruleFormRegister" class="demo-ruleForm">
+                                    <el-form-item prop="account">
+                                        <el-input type="text" placeholder="量子账号" v-model="ruleFormRegister.account" auto-complete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item prop="pass">
+                                        <el-input type="password" placeholder="密码" v-model="ruleFormRegister.pass" auto-complete="off"></el-input>
+                                        <div class="tip">密码安全程度：
+                                            <el-tag color="#fff" :class="{'pas_strong': lv == 1}" size="mini">弱</el-tag>
+                                            <el-tag color="#fff" :class="{'pas_strong': lv == 2}" size="mini">中</el-tag>
+                                            <el-tag color="#fff" :class="{'pas_strong': lv == 3}" size="mini">强</el-tag>
+                                        </div>
+                                    </el-form-item>
+                                    <el-form-item prop="checkPass">
+                                        <el-input type="password" placeholder="确认密码" v-model="ruleFormRegister.checkPass" auto-complete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item prop="code">
+                                        <el-input placeholder="邀请码" v-model.number="ruleFormRegister.code"></el-input>
+                                    </el-form-item>
+                                    <el-form-item>
+                                        <div class="line"></div>
+                                        <el-button type="primary" @click="submitFormRegister('ruleFormRegister')">注册</el-button>
+                                    </el-form-item>                             
+                                   <div class="register_tip">点击“注册”，即表示您愿意遵守<a href="javascript:;">《量子加速器》</a>中的所有内容</div>
+                                </el-form>
+                               
+                            </div>
+
+                        </el-tab-pane>
+                        <el-tab-pane label="登录" name="login">
+                            <div class="login">
+                                <el-form :model="ruleFormLogin" :rules="rules" ref="ruleFormLogin" class="demo-ruleForm">
+                                    <el-form-item prop="account">
+                                        <el-input type="text" placeholder="量子账号" v-model="ruleFormLogin.account" auto-complete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item prop="login_pass">
+                                        <el-input type="password" placeholder="密码" v-model="ruleFormLogin.login_pass" auto-complete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item>
+                                        <el-button type="primary" @click="submitFormLogin('ruleFormLogin')">登录</el-button>
+                                    </el-form-item>
+                                </el-form>
+                            </div>
+                        </el-tab-pane>
+                    </el-tabs>
+                   
+                </el-col>  
+                <el-col :span="5" :offset="2">
+                    <div class="download_btn">
+                        <img src="../assets/download_btn.png" width="100%" @click="downLoad" alt="">
+                    </div>
+                    
+                </el-col>  
+            </el-row>
+        </el-main>
+    </el-container>
+  </div>
+</template>
+
+<script>
+  export default {
+    data() {
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.ruleFormRegister.checkPass !== '') {
+            this.$refs.ruleFormRegister.validateField('checkPass');
+          } 
+            
+          callback();
+        }
+      };
+
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.ruleFormRegister.pass) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
+      return {
+        activeIndex2:'index',
+        activeName:'register',
+        lv:0,
+        ruleFormRegister: {
+          account:'',
+          pass: '',
+          checkPass: '',
+          code: '',
+        },
+        ruleFormLogin:{
+          account:'',
+          login_pass: ''
+        },
+        rules: {
+            account:[
+                { required: true, message: '请输入账号', trigger: 'blur' },
+            ],
+            pass: [  
+                { required: true, message: '请输入密码（6～20位数字、字母、特殊符号）', trigger: 'blur' },
+                { validator: validatePass, trigger: 'blur' },
+                { min: 6, max: 20, message: '长度6～20位字符', trigger: 'blur' }
+            ],
+            checkPass: [
+                { validator: validatePass2, trigger: 'blur' }
+            ],
+            login_pass:[
+                 { required: true, message: '请输入密码', trigger: 'blur' },
+                 { min: 6, max: 20, message: '长度6～20位字符', trigger: 'blur' }
+            ]
+        }
+      };
+     
+    },
+    watch: {
+        "ruleFormRegister.pass": function(value){
+            // 强：字母+数字+特殊字符   
+            var high =  /^(?![a-zA-z]+$)(?!\d+$)(?![!@#$%^&*]+$)(?![a-zA-z\d]+$)(?![a-zA-z!@#$%^&*]+$)(?![\d!@#$%^&*]+$)[a-zA-Z\d!@#$%^&*]+$/;       
+            // 中：字母+数字，字母+特殊字符，数字+特殊字符  
+            var middle = /^(?![a-zA-z]+$)(?!\d+$)(?![!@#$%^&*]+$)[a-zA-Z\d!@#$%^&*]+$/;  
+            // 弱：纯数字，纯字母，纯特殊字符  
+            var low = /^(?:\d+|[a-zA-Z]+|[!@#$%^&*]+)$/;  
+            if(value.length >= 6){
+                if(value.match(low)){
+                    this.lv = 1;
+                }
+                if(value.match(middle)){
+                    this.lv = 2;
+                }
+                if(value.match(high)){
+                    this.lv = 3;
+                }
+            }else{
+                this.lv = 0;
+            }
+        }
+    },
+    methods: {
+      handleClick(tab, event) {
+         if(tab.name == 'login'){
+             this.$refs['ruleFormLogin'].resetFields();
+         }else {
+             this.$refs['ruleFormRegister'].resetFields();
+         }
+      },
+      downLoad(){
+          alert('下载');
+      },
+      submitFormRegister(formName){
+          this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('注册submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      submitFormLogin(formName){
+          this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('登录submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      }
+    }
+  }
+</script>
+
+<style>
+.logo{
+    display: inline-block;
+    width: 44px;
+    height: 44px;
+    background: url('../assets/logo.png') no-repeat;
+    background-size: cover;
+    margin: 4px 0 0 0;
+}
+
+.el-header{
+    background-color: #fff;
+    color: #333;
+    text-align: center;
+    height: 70px !important;
+    padding:10px;
+    overflow: hidden;
+}
+.el-main{
+    background: url('../assets/bg.jpg') center center no-repeat;
+    display: table;
+    position: relative;
+    background-size: cover;
+    width: 100%;
+    height: 760px;
+    padding: 140px 0;
+}
+.tip{
+    height: 24px;
+    line-height: 24px;
+    text-align: left;
+    color: #3e3e3e;
+    font-size: 12px;
+    margin-top:6px;
+}
+
+.el-tabs__item{
+    padding: 0 15px;
+    color: #fff;
+    font-size: 18px;
+}
+.el-tabs__active-bar,.el-tabs__nav-wrap::after{
+    height: 0;
+}
+.el-tabs__header{
+    margin: 0;
+}
+
+.el-button {
+    width: 100%;
+}
+.el-tabs__item.is-active{
+    color: #000;
+    
+}
+.el-button--primary{
+    background-color: #2c8dc6;
+    border-color: #2c8dc6;
+    color: #fff;
+}
+.el-button--primary:focus, .el-button--primary:hover{
+    background-color: #309bda;
+    border-color: #309bda;
+}
+.el-form-item__error{
+    color: #e81f1f;
+}
+.el-form-item:nth-child(5){
+    margin-bottom: 10px;
+}
+.pas_strong{
+    background-color: #2c8dc6 !important;
+    color: #fff;
+}
+.el-tag--mini{
+    padding: 0 15px;
+}
+.download_btn{
+    width:250px;
+    height: 118px;
+    padding: 160px 8px 160px 36px;
+}
+.download_btn img:hover{
+    cursor: pointer;
+}
+.el-menu--horizontal{
+    border: none;
+}
+.el-menu--horizontal>.el-menu-item.is-active{
+    border-color: transparent !important;
+    background-color: transparent !important;
+}
+.register_tip{
+    font-size: 12px;
+    color:#000;
+}
+.el-col-offset-6{
+    margin-left: 21%;
+}
+.register_tip a{
+    color:#2c8dc6;
+    text-decoration: none;
+}
+</style>
