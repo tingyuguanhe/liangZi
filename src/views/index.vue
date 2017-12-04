@@ -17,18 +17,19 @@
             </el-row>
         </el-header>
         <el-main>
-            <el-row>
-                <el-col :span="6" :offset="6">
+            <ul class="form_box">
+                <li class="span_register">
                     <el-tabs v-model="activeName" @tab-click="handleClick">
                         <el-tab-pane label="注册" name="register">
                              <div class="register">
                                 <el-form :model="ruleFormRegister" :rules="rules" ref="ruleFormRegister" class="demo-ruleForm">
-                                    <el-form-item prop="account">
-                                        <el-input type="text" placeholder="量子账号" v-model="ruleFormRegister.account" auto-complete="off"></el-input>
+                                    <el-form-item prop="username">
+                                        <el-input type="text" placeholder="量子账号" v-model="ruleFormRegister.username" auto-complete="off"></el-input>
                                     </el-form-item>
-                                    <el-form-item prop="pass">
-                                        <el-input type="password" placeholder="密码" v-model="ruleFormRegister.pass" auto-complete="off"></el-input>
-                                        <div class="tip">密码安全程度：
+                                    <el-form-item prop="password">
+                                        <el-input type="password" placeholder="密码" v-model="ruleFormRegister.password" auto-complete="off"></el-input>
+                                        <div class="tip">
+                                            <span>密码安全程度：</span>
                                             <el-tag color="#fff" :class="{'pas_strong': lv == 1}" size="mini">弱</el-tag>
                                             <el-tag color="#fff" :class="{'pas_strong': lv == 2}" size="mini">中</el-tag>
                                             <el-tag color="#fff" :class="{'pas_strong': lv == 3}" size="mini">强</el-tag>
@@ -37,8 +38,8 @@
                                     <el-form-item prop="checkPass">
                                         <el-input type="password" placeholder="确认密码" v-model="ruleFormRegister.checkPass" auto-complete="off"></el-input>
                                     </el-form-item>
-                                    <el-form-item prop="code">
-                                        <el-input placeholder="邀请码" v-model.number="ruleFormRegister.code"></el-input>
+                                    <el-form-item prop="inviteCode">
+                                        <el-input placeholder="邀请码" v-model.number="ruleFormRegister.inviteCode"></el-input>
                                     </el-form-item>
                                     <el-form-item>
                                         <div class="line"></div>
@@ -53,8 +54,8 @@
                         <el-tab-pane label="登录" name="login">
                             <div class="login">
                                 <el-form :model="ruleFormLogin" :rules="rules" ref="ruleFormLogin" class="demo-ruleForm">
-                                    <el-form-item prop="account">
-                                        <el-input type="text" placeholder="量子账号" v-model="ruleFormLogin.account" auto-complete="off"></el-input>
+                                    <el-form-item prop="username">
+                                        <el-input type="text" placeholder="量子账号" v-model="ruleFormLogin.username" auto-complete="off"></el-input>
                                     </el-form-item>
                                     <el-form-item prop="login_pass">
                                         <el-input type="password" placeholder="密码" v-model="ruleFormLogin.login_pass" auto-complete="off"></el-input>
@@ -67,20 +68,21 @@
                         </el-tab-pane>
                     </el-tabs>
                    
-                </el-col>  
-                <el-col :span="5" :offset="2">
+                </li>  
+                <li class="span_login">
                     <div class="download_btn">
                         <img src="../assets/download_btn.png" width="100%" @click="downLoad" alt="">
                     </div>
                     
-                </el-col>  
-            </el-row>
+                </li>  
+            </ul>
         </el-main>
     </el-container>
   </div>
 </template>
 
 <script>
+import { userRegister } from '@/api/api'
   export default {
     data() {
       var validatePass = (rule, value, callback) => {
@@ -98,7 +100,7 @@
       var validatePass2 = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'));
-        } else if (value !== this.ruleFormRegister.pass) {
+        } else if (value !== this.ruleFormRegister.password) {
           callback(new Error('两次输入密码不一致!'));
         } else {
           callback();
@@ -109,20 +111,20 @@
         activeName:'register',
         lv:0,
         ruleFormRegister: {
-          account:'',
-          pass: '',
+          username:'',
+          password: '',
           checkPass: '',
-          code: '',
+          inviteCode: '',
         },
         ruleFormLogin:{
-          account:'',
+          username:'',
           login_pass: ''
         },
         rules: {
-            account:[
+            username:[
                 { required: true, message: '请输入账号', trigger: 'blur' },
             ],
-            pass: [  
+            password: [  
                 { required: true, message: '请输入密码（6～20位数字、字母、特殊符号）', trigger: 'blur' },
                 { validator: validatePass, trigger: 'blur' },
                 { min: 6, max: 20, message: '长度6～20位字符', trigger: 'blur' }
@@ -136,10 +138,10 @@
             ]
         }
       };
-     
     },
+    
     watch: {
-        "ruleFormRegister.pass": function(value){
+        "ruleFormRegister.password": function(value){
             // 强：字母+数字+特殊字符   
             var high =  /^(?![a-zA-z]+$)(?!\d+$)(?![!@#$%^&*]+$)(?![a-zA-z\d]+$)(?![a-zA-z!@#$%^&*]+$)(?![\d!@#$%^&*]+$)[a-zA-Z\d!@#$%^&*]+$/;       
             // 中：字母+数字，字母+特殊字符，数字+特殊字符  
@@ -161,6 +163,7 @@
             }
         }
     },
+   
     methods: {
       handleClick(tab, event) {
          if(tab.name == 'login'){
@@ -170,12 +173,27 @@
          }
       },
       downLoad(){
-          alert('下载');
+          this.$message.success('下载成功');
       },
       submitFormRegister(formName){
           this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('注册submit!');
+            var reqData = {
+                username:this.ruleFormRegister.username,
+                password: this.ruleFormRegister.password,
+                // inviteCode: this.ruleFormRegister.inviteCode
+            };
+            userRegister(reqData).then(
+                (resData) => {
+                    console.log(resData);
+                    if(resData.status == 'ok'){
+                        this.$message.success('注册成功');
+                    }else{
+                        this.$message.error('注册失败，请稍后重试');
+                    }
+                   
+                }
+            )
           } else {
             console.log('error submit!!');
             return false;
@@ -197,6 +215,7 @@
 </script>
 
 <style>
+
 .logo{
     display: inline-block;
     width: 44px;
@@ -216,12 +235,15 @@
 }
 .el-main{
     background: url('../assets/bg.jpg') center center no-repeat;
-    display: table;
-    position: relative;
+    position: absolute;
+    left: 0;
+    top: 70px;
+    display: block;
     background-size: cover;
     width: 100%;
-    height: 760px;
-    padding: 140px 0;
+    height: 91.4%;
+    padding: 130px 0;
+    overflow: hidden;
 }
 .tip{
     height: 24px;
@@ -271,12 +293,58 @@
     color: #fff;
 }
 .el-tag--mini{
-    padding: 0 15px;
+    padding: 0 5%;
+}
+
+.form_box{
+    position: absolute;
+    top: 110px;
+    left:0;
+    width: 100%;
+    min-width: 400px;
+}
+.form_box li{
+    width: 30%;
+    list-style: none;
+    float: left;
+}
+.span_login{
+    margin-left: 10%;
+}
+.span_register{
+    margin-left: 16%;
 }
 .download_btn{
-    width:250px;
-    height: 118px;
-    padding: 160px 8px 160px 36px;
+    max-width:220px;
+    min-width:120px;
+    padding: 180px 0 0 0;
+}
+@media screen and (max-width:600px) {
+    .form_box li{
+        width: 40%;
+    }
+    .download_btn{
+        width: 80%;
+        padding: 160px 0 0 0;
+    }
+    .span_register{
+        margin-left: 0;
+    }
+    .span_login{
+        margin-left: 16%;
+    }
+}
+@media screen and (min-width:601px) and (max-width: 1366px) {
+    .download_btn{
+        width: 170px;
+        padding: 170px 0 0 90px;
+    }
+    .span_register{
+        margin-left: 10%;
+    }
+    .span_login{
+        margin-left: 6%;
+    }
 }
 .download_btn img:hover{
     cursor: pointer;
