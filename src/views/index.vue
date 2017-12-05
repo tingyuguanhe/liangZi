@@ -4,7 +4,7 @@
         <el-header>
             <el-row>
                 <el-col :span="1">
-                    <a href="javascripot:;" class="logo"></a>
+                    <a href="javascript:;" class="logo"></a>
                 </el-col>
                 <el-col :span="8" :offset="15">
                      <el-menu :default-active="activeIndex2" class="el-menu-demo"
