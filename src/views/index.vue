@@ -300,6 +300,7 @@ import { userRegister } from '@/api/api'
     position: absolute;
     top: 110px;
     left:0;
+    right:0;
     width: 100%;
     min-width: 400px;
 }
