@@ -4,15 +4,28 @@ import HelloWorld from '@/components/HelloWorld'
 
 Vue.use(Router)
 
-
+const layout = () => import('@/views/layout/app_main')
 const index = () => import('@/views/index')
+const account = () => import('@/views/account/index')
 
 export default new Router({
   routes: [
     {
       path: '/',
-      name: 'index',
-      component: index
+      name: 'layout',
+      component: layout,
+      children:[
+        {
+          path: '',
+          name: 'index',
+          component: index,
+        },
+        {
+          path: '/account',
+          name: 'account',
+          component: account
+        }
+      ]
     }
   ]
 })

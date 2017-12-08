@@ -1,21 +1,6 @@
 <template>
   <div>
       <el-container>
-        <el-header>
-            <el-row>
-                <el-col :span="1">
-                    <a href="javascript:;" class="logo"></a>
-                </el-col>
-                <el-col :span="8" :offset="15">
-                     <el-menu :default-active="activeIndex2" class="el-menu-demo"
-                mode="horizontal"  background-color="#fff"
-                text-color="#fff"
-                active-text-color="#538cc4">
-                <el-menu-item index="index">首页</el-menu-item>
-            </el-menu>
-                </el-col>
-            </el-row>
-        </el-header>
         <el-main>
             <ul class="form_box">
                 <li class="span_register">
@@ -107,7 +92,7 @@ import { userRegister } from '@/api/api'
         }
       };
       return {
-        activeIndex2:'index',
+        
         activeName:'register',
         lv:0,
         ruleFormRegister: {
@@ -188,8 +173,9 @@ import { userRegister } from '@/api/api'
                     console.log(resData);
                     if(resData.status == 'ok'){
                         this.$message.success('注册成功');
+                        this.$router.push({name:'account'});
                     }else{
-                        this.$message.error('注册失败，请稍后重试');
+                        this.$message.error(resData.message);
                     }
                    
                 }
@@ -203,7 +189,7 @@ import { userRegister } from '@/api/api'
       submitFormLogin(formName){
           this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('登录submit!');
+            this.$router.push({name:'account'});
           } else {
             console.log('error submit!!');
             return false;
@@ -214,25 +200,9 @@ import { userRegister } from '@/api/api'
   }
 </script>
 
-<style>
+<style lang="scss">
 
-.logo{
-    display: inline-block;
-    width: 44px;
-    height: 44px;
-    background: url('../assets/logo.png') no-repeat;
-    background-size: cover;
-    margin: 4px 0 0 0;
-}
 
-.el-header{
-    background-color: #fff;
-    color: #333;
-    text-align: center;
-    height: 70px !important;
-    padding:10px;
-    overflow: hidden;
-}
 .el-main{
     background: url('../assets/bg.jpg') center center no-repeat;
     position: absolute;
