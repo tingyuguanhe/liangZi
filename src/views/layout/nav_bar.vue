@@ -13,7 +13,7 @@
         </div>
         <div class="head_menu clearfix"> 
             <el-menu :default-active="$route.path" class="el-menu-demo" @select="selectMenu"
-                mode="horizontal"  background-color="#071c2e" :router="true"
+                mode="horizontal"  background-color="#041b2d" :router="true"
                 text-color="#fff"
                 active-text-color="#ffe600">
                 <el-menu-item v-for="item in menu_routes" :key="item.name" :index="item.path" >{{item.text}}</el-menu-item>
@@ -48,7 +48,7 @@ export default {
 
 
 .el-header{
-    background-color: #071c2e;
+    background-color: #041b2d;
     color: #333;
     text-align: center;
     
