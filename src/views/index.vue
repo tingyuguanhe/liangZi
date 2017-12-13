@@ -40,7 +40,7 @@ export default {
     display: block;
     background-size: cover;
     width: 100%;
-    height: 766px;
+    height: 746px;
     padding: 130px 0;
     overflow: hidden;
 }

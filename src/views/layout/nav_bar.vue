@@ -11,18 +11,13 @@
                 </div>
             </a>
         </div>
-        <div  class="head_menu">
-            <el-row>
-                <el-col :span="24">
-                    <el-menu :default-active="$route.path" class="el-menu-demo" @select="selectMenu"
-                        mode="horizontal"  background-color="#071c2e" :router="true"
-                        text-color="#fff"
-                        active-text-color="#ffe600">
-                        <el-menu-item v-for="item in menu_routes" :key="item.name" :index="item.path" >{{item.text}}</el-menu-item>
-                        
-                    </el-menu>
-                </el-col>
-            </el-row>
+        <div class="head_menu clearfix"> 
+            <el-menu :default-active="$route.path" class="el-menu-demo" @select="selectMenu"
+                mode="horizontal"  background-color="#071c2e" :router="true"
+                text-color="#fff"
+                active-text-color="#ffe600">
+                <el-menu-item v-for="item in menu_routes" :key="item.name" :index="item.path" >{{item.text}}</el-menu-item>
+            </el-menu>
         </div>
 </el-header>
 </template>
@@ -79,7 +74,6 @@ export default {
     }
     
     .logo{
-        display: inline-block;
         width: 50px;
         height: 50px;
         float: left;
@@ -88,11 +82,6 @@ export default {
     }
 }
 .head_menu{
-    float: left;
-    width: 80%;
-    .el-col{
-        
-    }
     .el-menu--horizontal {
         float: right;
         border: none;
