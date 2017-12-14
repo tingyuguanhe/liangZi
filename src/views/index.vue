@@ -46,7 +46,7 @@ export default {
 .banner_btn{
     position: absolute;
     left: 50%;
-    margin-left: -120px;
+    margin-left: -145px;
     top: 76%;
     cursor: pointer;
     img{
