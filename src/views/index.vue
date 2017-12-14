@@ -2,10 +2,10 @@
   <div>
       <el-container>
         <el-main>
-            <div class="banner_text">
-                <img src="../assets/banner_text.png" width="320px" alt="">
+            <div class="banner_btn">
+                <!-- <img src="../assets/banner_text.png" width="320px" alt=""> -->
                 <div class="download_btn" @click="downLoad">
-                    <img src="../assets/new_down.png" width="250px" alt="">
+                    <img src="../assets/banner_btn.png" width="100%" alt="">
                 </div>
             </div>
             
@@ -33,7 +33,7 @@ export default {
 <style lang="scss">
 @import url("../style/common.css");
 .el-main{
-    background: url('../assets/new_bg.png') center center no-repeat;
+    background: url('../assets/banner.jpg') center center no-repeat;
     position: absolute;
     left: 0;
     top: 80px;
@@ -41,18 +41,20 @@ export default {
     background-size: cover;
     width: 100%;
     height: 746px;
-    padding: 130px 0;
     overflow: hidden;
 }
-.banner_text{
-    margin: 50px 0;
+.banner_btn{
     position: absolute;
     left: 50%;
-    >img{
+    margin-left: -120px;
+    top: 76%;
+    cursor: pointer;
+    img{
+        border-radius: 150px;
         width: 320px;
     }
 }
-.download_btn{
-    margin: 50px 0;
+.banner_btn img:hover{
+    background: #002854;
 }
 </style>
