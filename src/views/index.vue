@@ -5,11 +5,11 @@
             <div class="banner_btn">
                 <!-- <img src="../assets/banner_text.png" width="320px" alt=""> -->
                 <div class="download_btn" @click="downLoad">
-                    <img src="../assets/banner_btn.png" width="100%" alt="">
+                    <a href="http://quantom.internmate.com/QuantomInstaller.exe" download="QuantomInstaller.exe">
+                        <img src="../assets/banner_btn.png" width="100%" alt="">
+                    </a>
                 </div>
             </div>
-            
-        
         </el-main>
     </el-container>
   </div>
@@ -33,7 +33,7 @@ export default {
 <style lang="scss">
 @import url("../style/common.css");
 .el-main{
-    background: url('../assets/banner.jpg') center center no-repeat;
+    background: url('../assets/banner_new.png') center center no-repeat;
     position: absolute;
     left: 0;
     top: 80px;

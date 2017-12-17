@@ -16,19 +16,28 @@
             <p>{{active_name}}</p>
             <el-row>
               <el-col :span="2">用户名：</el-col>  
-              <el-col :span="22">khflidfliafdsRTFWKUgdiwgf</el-col>
+              <el-col :span="22">
+                {{user_info.username}}
+                <img src="../../assets/vip.png"  class="icon" width="38px"> 
+              </el-col>
             </el-row>
             <el-row>
               <el-col :span="2">登录时长：</el-col>  
-              <el-col :span="22"><span class="green">180</span> 小时</el-col>
+              <el-col :span="22"><span class="green">0</span> 小时</el-col>
             </el-row>
             <el-row>
               <el-col :span="2">邀请码：</el-col>  
-              <el-col :span="22">abcdefgabcdefgabcdefg</el-col>
+              <el-col :span="22">
+                <span v-if="user_info.invite_code" class="invite_color">{{user_info.invite_code}}</span>
+                <span v-else class="invite_color">暂无</span>
+              </el-col>
             </el-row>
             <el-row>
               <el-col :span="2">剩余时长：</el-col>  
-              <el-col :span="22"><span class="red">10</span> 小时</el-col>
+              <el-col :span="22">
+                <span v-if="user_info.time">{{user_info.time}} 小时</span>
+                <span v-else class="red">暂无</span>
+              </el-col>
             </el-row>
            
           </div>
@@ -39,6 +48,7 @@
 </template>
 
 <script>
+import {checkLogin} from '@/api/api'
   export default {
     data() {
       return {
@@ -53,8 +63,12 @@
             key:'recharge_record'
           }
         ],
-        active_name:''
+        active_name:'',
+        user_info:{}
       };
+    },
+    created () {
+      this.get_user_info();
     },
     mounted () {
         var key = this.menu_list[0].key;
@@ -71,6 +85,19 @@
             this.active_name = this.menu_list[i].name;
           }
         }
+      },
+      get_user_info(){
+        checkLogin().then(
+          (resData) => {
+            if(resData && resData.status == 'ok'){
+              //console.log(resData.data);
+              this.user_info = resData.data;
+              //this.$store.dispatch('get_user_info');
+            }else{
+              console.log('获取信息失败');
+            }
+          }
+        )
       }
     }
   }
@@ -93,13 +120,12 @@
   padding: 10px 60px;
   text-align: left;
 }
-.account_box{
-  
-
-}
 .account_content{
   background: #fff;
-  
+  .icon{
+    vertical-align: bottom;
+    margin: 0 0 0 20px;
+  }
   p{
     border-bottom: 1px solid #eee;
     height: 40px;
@@ -120,6 +146,9 @@
   .red{
     color: #f00;
     font-weight: 600;
+  }
+  .invite_color{
+    color:#ff5900;
   }
 
 }

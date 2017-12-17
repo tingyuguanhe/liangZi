@@ -9,7 +9,9 @@
                 <img src="../../assets/banner_text.png" width="40%" alt="">
             </div>
             <div>
-                <img src="../../assets/new_down.png" width="28%">
+                <a href="http://quantom.internmate.com/QuantomInstaller.exe" download="QuantomInstaller.exe">
+                    <img src="../../assets/new_down.png" width="28%">
+                </a>
             </div>
             <div>
                 <img src="../../assets/login_banner.png"  width="95%" alt="">
@@ -22,10 +24,10 @@
                         <div class="register">
                         <el-form :model="ruleFormRegister" :rules="rules" ref="ruleFormRegister" class="demo-ruleForm">
                             <el-form-item prop="username">
-                                <el-input type="text" placeholder="量子账号" v-model="ruleFormRegister.username" auto-complete="off"></el-input>
+                                <el-input type="text" placeholder="量子账号（手机号）" v-model.trim="ruleFormRegister.username" auto-complete="off"></el-input>
                             </el-form-item>
                             <el-form-item prop="password">
-                                <el-input type="password" placeholder="密码" v-model="ruleFormRegister.password" auto-complete="off"></el-input>
+                                <el-input type="password" placeholder="密码" v-model.trim="ruleFormRegister.password" auto-complete="off"></el-input>
                                 <div class="tip">
                                     <span>密码安全程度：</span>
                                     <el-tag color="#fff" :class="{'pas_strong': lv == 1}" size="mini">弱</el-tag>
@@ -34,14 +36,14 @@
                                 </div>
                             </el-form-item>
                             <el-form-item prop="checkPass">
-                                <el-input type="password" placeholder="确认密码" v-model="ruleFormRegister.checkPass" auto-complete="off"></el-input>
+                                <el-input type="password" placeholder="确认密码" v-model.trim="ruleFormRegister.checkPass" auto-complete="off"></el-input>
                             </el-form-item>
-                            <el-form-item prop="phoneCheckCode" class="phone_check_code">
-                                <el-input placeholder="手机验证码" v-model.number="ruleFormRegister.phoneCheckCode"></el-input>
-                                <el-button type="primary">获取手机验证码</el-button>
+                            <el-form-item prop="sms_code" class="phone_check_code">
+                                <el-input placeholder="手机验证码" v-model.number="ruleFormRegister.sms_code"></el-input>
+                                <el-button type="primary" @click="get_sms_code">获取手机验证码</el-button>
                             </el-form-item>
-                            <el-form-item prop="inviteCode">
-                                <el-input placeholder="邀请码（选填）" v-model.number="ruleFormRegister.inviteCode"></el-input>
+                            <el-form-item prop="invite_code">
+                                <el-input placeholder="邀请码（选填）" v-model.number="ruleFormRegister.invite_code"></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <div class="line"></div>
@@ -57,10 +59,10 @@
                     <div class="login">
                         <el-form :model="ruleFormLogin" :rules="rules" ref="ruleFormLogin" class="demo-ruleForm">
                             <el-form-item prop="username">
-                                <el-input type="text" placeholder="量子账号" v-model="ruleFormLogin.username" auto-complete="off"></el-input>
+                                <el-input type="text" placeholder="量子账号" v-model.trim="ruleFormLogin.username" auto-complete="off"></el-input>
                             </el-form-item>
                             <el-form-item prop="login_pass">
-                                <el-input type="password" placeholder="密码" v-model="ruleFormLogin.login_pass" auto-complete="off"></el-input>
+                                <el-input type="password" placeholder="密码" v-model.trim="ruleFormLogin.login_pass" auto-complete="off"></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" @click="submitFormLogin('ruleFormLogin')">登录</el-button>
@@ -78,9 +80,24 @@
 
 <script>
 import {bannerUrl} from '@/config'
-import { userRegister } from '@/api/api'
+import { userRegister,getSmsCode,userLogin } from '@/api/api'
   export default {
     data() {
+        var checkPhone = (rule, value, callback) => {
+            var reg = /^1\d{10}$/;
+            var phone_flag = false;
+            if(value == ''){
+                return callback(new Error('请输入手机号'));
+            }else{
+                phone_flag = reg.test(value);
+                if(phone_flag){
+                    callback();
+                }else{
+                    return callback(new Error('请输入正确的手机号'));
+                }
+            }   
+        }
+
       var validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
@@ -109,8 +126,8 @@ import { userRegister } from '@/api/api'
           username:'',
           password: '',
           checkPass: '',
-          phoneCheckCode:'',
-          inviteCode: '',
+          invite_code: '',
+          sms_code:'',
         },
         ruleFormLogin:{
           username:'',
@@ -118,7 +135,8 @@ import { userRegister } from '@/api/api'
         },
         rules: {
             username:[
-                { required: true, message: '请输入账号', trigger: 'blur' },
+                { required: true, message: '请输入手机号', trigger: 'blur' },
+                {validator: checkPhone, trigger:'blur'}
             ],
             password: [  
                 { required: true, message: '请输入密码（6～20位数字、字母、特殊符号）', trigger: 'blur' },
@@ -132,7 +150,7 @@ import { userRegister } from '@/api/api'
                  { required: true, message: '请输入密码', trigger: 'blur' },
                  { min: 6, max: 20, message: '长度6～20位字符', trigger: 'blur' }
             ],
-            phoneCheckCode: [
+            sms_code: [
                 { required: true, message: '请输入手机验证码', trigger: 'blur' },
             ]
         }
@@ -174,24 +192,27 @@ import { userRegister } from '@/api/api'
       downLoad(){
           this.$message.success('下载成功');
       },
+      //注册
       submitFormRegister(formName){
           this.$refs[formName].validate((valid) => {
           if (valid) {
             var reqData = {
-                username:this.ruleFormRegister.username,
-                password: this.ruleFormRegister.password,
-                // inviteCode: this.ruleFormRegister.inviteCode
+                user:{
+                    username:this.ruleFormRegister.username,
+                    password: this.ruleFormRegister.password
+                },
+                sms_code: this.ruleFormRegister.sms_code,
+                invite_code: this.ruleFormRegister.invite_code
             };
             userRegister(reqData).then(
                 (resData) => {
                     console.log(resData);
                     if(resData.status == 'ok'){
-                        this.$message.success('注册成功');
+                        //this.$store.dispatch('get_user_info');
                         this.$router.push({name:'account'});
                     }else{
                         this.$message.error(resData.message);
                     }
-                   
                 }
             )
           } else {
@@ -200,10 +221,40 @@ import { userRegister } from '@/api/api'
           }
         });
       },
+      //获取手机验证码
+      get_sms_code(){
+        if(!!this.ruleFormRegister.username){
+            var param = {
+                phone_num: this.ruleFormRegister.username
+            }
+            getSmsCode(param).then(
+                (resData) => {
+                    console.log('手机验证码',resData);
+                }
+            )
+        }else{
+            this.$message.error('请填写手机号');
+        }
+      },
+      //登录
       submitFormLogin(formName){
           this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$router.push({name:'account'});
+              var reqData = {
+                username:this.ruleFormLogin.username,
+                password: this.ruleFormLogin.login_pass
+            };
+            userLogin(reqData).then(
+                (resData) => {
+                    if(resData && resData.status == 'ok'){
+                        //this.$store.dispatch('get_user_info');
+                        this.$router.push({name:'account'});
+                    }else{
+                        this.$message.error(resData.message);
+                    } 
+                }
+            )
+            
           } else {
             console.log('error submit!!');
             return false;
@@ -294,6 +345,7 @@ import { userRegister } from '@/api/api'
 }
 .form_box li:first-child{
     width: 50%;
+    min-width: 500px;
     margin: 18px 0 0 0;
     position: relative;
 }

@@ -12,34 +12,60 @@
             </a>
         </div>
         <div class="head_menu clearfix"> 
-            <el-menu :default-active="$route.path" class="el-menu-demo" @select="selectMenu"
+            <el-menu :default-active="activeIndex" class="el-menu-demo" @select="selectMenu"
                 mode="horizontal"  background-color="#003265" :router="true"
                 text-color="#fff"
                 active-text-color="#d1ff00">
-                <el-menu-item v-for="item in menu_routes" :key="item.name" :index="item.path" >{{item.text}}</el-menu-item>
+                <el-menu-item v-for="item in menu_routes" v-if="!username" :key="item.name" :index="item.path" >
+                    <span>{{item.text}}</span>
+                </el-menu-item>
+                <el-menu-item v-for="item in menu_routes" v-if="!!username" :key="item.name" :index="item.path" >
+                    <span v-if="item.path != '/login'">{{item.text}}</span>
+                </el-menu-item>
+                <el-menu-item index="" v-if="!!username" @click="login_out">
+                    <span>退出</span>
+                </el-menu-item>
+               
             </el-menu>
+            
         </div>
 </el-header>
 </template>
 
 <script>
+import {loginOut} from '@/api/api'
 export default {
   data(){
       return{
-          activeMenu:'index',
+          activeMenu:'index'
       }
-  },
-  created () {
   },
   computed: {
     menu_routes () {
       return this.$router.options.routes[0].children
+    },
+    activeIndex(){
+        return this.$route.matched[1].path;
+    },
+    username(){
+        return this.$store.state.user.user_name;
     }
   },
   methods: {
-      selectMenu(index,indexPath){
-          this.activeMenu = index;
-      }
+    selectMenu(index,indexPath){
+        this.activeMenu = index;
+    },
+    login_out(){
+        loginOut().then(
+            (resData) => {
+                if(resData && resData.status == 'ok'){
+                    window.location.href = '/';
+                }else{
+                    console.log('退出失败');
+                }
+            }
+        )
+    }
   }
 }
 </script>
@@ -98,7 +124,6 @@ export default {
         background-color: transparent !important;
     } 
 }
-
 
 </style>
 
