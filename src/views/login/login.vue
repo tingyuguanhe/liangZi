@@ -40,7 +40,10 @@
                             </el-form-item>
                             <el-form-item prop="sms_code" class="phone_check_code">
                                 <el-input placeholder="手机验证码" v-model.number="ruleFormRegister.sms_code"></el-input>
-                                <el-button type="primary" @click="get_sms_code">获取手机验证码</el-button>
+                                <el-button type="primary" @click="get_sms_code" v-if="!sendMsgDisabled" >
+                                    获取手机验证码
+                                </el-button>
+                                <el-button type="primary" v-if="sendMsgDisabled" :loading="true">{{time+'秒后重新获取'}}</el-button>
                             </el-form-item>
                             <el-form-item prop="invite_code">
                                 <el-input placeholder="邀请码（选填）" v-model.number="ruleFormRegister.invite_code"></el-input>
@@ -48,6 +51,7 @@
                             <el-form-item>
                                 <div class="line"></div>
                                 <el-button type="primary" @click="submitFormRegister('ruleFormRegister')">注册</el-button>
+                                <el-button type="primary" v-if="btn_loading" :loading="true">注册中，请稍等..</el-button>
                             </el-form-item>                             
                             <div class="register_tip">点击“注册”，即表示您愿意遵守<a href="javascript:;">《量子加速器》</a>中的所有内容</div>
                         </el-form>
@@ -65,7 +69,8 @@
                                 <el-input type="password" placeholder="密码" v-model.trim="ruleFormLogin.login_pass" auto-complete="off"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" @click="submitFormLogin('ruleFormLogin')">登录</el-button>
+                                <el-button type="primary" v-if="!btn_loading" @click="submitFormLogin('ruleFormLogin')">登录</el-button>
+                                <el-button type="primary" v-if="btn_loading" :loading="true">登录中，请稍等...</el-button>
                             </el-form-item>
                         </el-form>
                     </div>
@@ -153,7 +158,11 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
             sms_code: [
                 { required: true, message: '请输入手机验证码', trigger: 'blur' },
             ]
-        }
+        },
+        btn_loading: false,
+        sms_btn_loading: false,
+        time: 180, // 发送验证码倒计时
+        sendMsgDisabled: false
       };
     },
     
@@ -196,6 +205,7 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
       submitFormRegister(formName){
           this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.btn_loading = true;
             var reqData = {
                 user:{
                     username:this.ruleFormRegister.username,
@@ -211,6 +221,7 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
                         //this.$store.dispatch('get_user_info');
                         this.$router.push({name:'account'});
                     }else{
+                        this.btn_loading = false;
                         this.$message.error(resData.message);
                     }
                 }
@@ -223,24 +234,34 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
       },
       //获取手机验证码
       get_sms_code(){
-        if(!!this.ruleFormRegister.username){
+        let me = this;
+        if(!!me.ruleFormRegister.username){
             var param = {
-                phone_num: this.ruleFormRegister.username
+                phone_num: me.ruleFormRegister.username
             }
             getSmsCode(param).then(
                 (resData) => {
                     console.log('手机验证码',resData);
                 }
             )
+            me.sendMsgDisabled = true;
+            let interval = window.setInterval(function() {
+                if ((me.time--) <= 0) {
+                    me.time = 180;
+                    me.sendMsgDisabled = false;
+                    window.clearInterval(interval);
+                }
+            }, 1000);
         }else{
-            this.$message.error('请填写手机号');
+            me.$message.error('请填写手机号');
         }
       },
       //登录
       submitFormLogin(formName){
           this.$refs[formName].validate((valid) => {
           if (valid) {
-              var reqData = {
+            this.btn_loading = true;
+            var reqData = {
                 username:this.ruleFormLogin.username,
                 password: this.ruleFormLogin.login_pass
             };
@@ -250,6 +271,7 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
                         //this.$store.dispatch('get_user_info');
                         this.$router.push({name:'account'});
                     }else{
+                        this.btn_loading = false;
                         this.$message.error(resData.message);
                     } 
                 }
