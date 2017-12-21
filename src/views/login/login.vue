@@ -1,6 +1,6 @@
 <template>
-  <div>
-      <ul class="form_box">
+ 
+      <ul class="form_box clearfix">
         <li class="login_reg_banner">
             <div>
                 <img src="../../assets/login_banner_title.png" width="50%" @click="downLoad" alt="">
@@ -38,6 +38,12 @@
                             <el-form-item prop="checkPass">
                                 <el-input type="password" placeholder="确认密码" v-model.trim="ruleFormRegister.checkPass" auto-complete="off"></el-input>
                             </el-form-item>
+                            <!-- 图片验证码 -->
+                            <el-form-item prop="code" class="phone_check_code">
+                                <el-input placeholder="图片验证码" v-model.number="ruleFormRegister.code"></el-input>                           
+                                <img class="code_img" :src="captcha_url">         
+                            </el-form-item>
+                            <!-- 手机验证码 -->
                             <el-form-item prop="sms_code" class="phone_check_code">
                                 <el-input placeholder="手机验证码" v-model.number="ruleFormRegister.sms_code"></el-input>
                                 <el-button type="primary" @click="get_sms_code" v-if="!sendMsgDisabled" >
@@ -50,7 +56,7 @@
                             </el-form-item>
                             <el-form-item>
                                 <div class="line"></div>
-                                <el-button type="primary" @click="submitFormRegister('ruleFormRegister')">注册</el-button>
+                                <el-button type="primary" v-if="!btn_loading" @click="submitFormRegister('ruleFormRegister')">注册</el-button>
                                 <el-button type="primary" v-if="btn_loading" :loading="true">注册中，请稍等..</el-button>
                             </el-form-item>                             
                             <div class="register_tip">点击“注册”，即表示您愿意遵守<a href="javascript:;">《量子加速器》</a>中的所有内容</div>
@@ -80,12 +86,12 @@
         </li>  
         
     </ul>
-  </div>
+
 </template>
 
 <script>
 import {bannerUrl} from '@/config'
-import { userRegister,getSmsCode,userLogin } from '@/api/api'
+import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
   export default {
     data() {
         var checkPhone = (rule, value, callback) => {
@@ -133,6 +139,8 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
           checkPass: '',
           invite_code: '',
           sms_code:'',
+          code:'',
+          key:''
         },
         ruleFormLogin:{
           username:'',
@@ -156,13 +164,17 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
                  { min: 6, max: 20, message: '长度6～20位字符', trigger: 'blur' }
             ],
             sms_code: [
-                { required: true, message: '请输入手机验证码', trigger: 'blur' },
+                { required: true, message: '请输入手机验证码', trigger: 'blur' }
+            ],
+            code:[
+                { required: true, message: '请输入图片验证码', trigger: 'blur' }
             ]
         },
         btn_loading: false,
         sms_btn_loading: false,
         time: 180, // 发送验证码倒计时
-        sendMsgDisabled: false
+        sendMsgDisabled: false,
+        captcha_url:''
       };
     },
     
@@ -189,7 +201,9 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
             }
         }
     },
-   
+    created () {
+       this.getCaptcha();
+    },
     methods: {
       handleClick(tab, event) {
          if(tab.name == 'login'){
@@ -209,10 +223,12 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
             var reqData = {
                 user:{
                     username:this.ruleFormRegister.username,
-                    password: this.ruleFormRegister.password
+                    password: this.ruleFormRegister.password 
                 },
                 sms_code: this.ruleFormRegister.sms_code,
-                invite_code: this.ruleFormRegister.invite_code
+                invite_code: this.ruleFormRegister.invite_code,
+                code: this.ruleFormRegister.code,
+                key: this.ruleFormRegister.key
             };
             userRegister(reqData).then(
                 (resData) => {
@@ -222,6 +238,7 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
                         this.$router.push({name:'account'});
                     }else{
                         this.btn_loading = false;
+                        this.getCaptcha();
                         this.$message.error(resData.message);
                     }
                 }
@@ -232,15 +249,42 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
           }
         });
       },
+      //获取图片验证码
+      getCaptcha(){
+          getCaptcha().then(
+              (resData) => {
+                  if(resData.status == 'ok'){
+                      var Data = resData.data;
+                      this.captcha_url = Data.url;
+                      this.ruleFormRegister.key = Data.key;
+                  }else{
+                      console.log('图片验证码加载失败');
+                  }
+              }
+          )
+      },
       //获取手机验证码
       get_sms_code(){
         let me = this;
-        if(!!me.ruleFormRegister.username){
-            var param = {
-                phone_num: me.ruleFormRegister.username
+        if(!me.ruleFormRegister.username){
+            me.$message.error('请填写手机号');
+            return;
+        }
+        if(!me.ruleFormRegister.code){
+            me.$message.error('请填写图片验证码');
+            return;
+        }
+        if(!!me.ruleFormRegister.username && !!me.ruleFormRegister.code){
+            var reqData = {
+                phone: me.ruleFormRegister.username,
+                code: me.ruleFormRegister.code,
+                key: me.ruleFormRegister.key
             }
-            getSmsCode(param).then(
+            getSmsCode(reqData).then(
                 (resData) => {
+                    if(resData && resData.status == 'ok'){
+                        me.$message.success('手机验证码已下发，请注意查收');
+                    }
                     console.log('手机验证码',resData);
                 }
             )
@@ -252,10 +296,9 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
                     window.clearInterval(interval);
                 }
             }, 1000);
-        }else{
-            me.$message.error('请填写手机号');
         }
       },
+      
       //登录
       submitFormLogin(formName){
           this.$refs[formName].validate((valid) => {
@@ -329,7 +372,13 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
 .el-button {
     width: 100%;
 }
-
+.code_img{
+    border: 1px solid #ebedf2;
+    border-radius: 4px;
+    padding: 0 50px;
+    float: left;
+    margin: 0 0 0 25px;
+}
 .el-button--primary{
     background-color: #2c8dc6;
     border-color: #2c8dc6;
@@ -342,9 +391,7 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
 .el-form-item__error{
     color: #e81f1f;
 }
-.el-form-item:nth-child(5){
-    margin-bottom: 10px;
-}
+
 .pas_strong{
     background-color: #2c8dc6 !important;
     color: #fff;
@@ -354,10 +401,7 @@ import { userRegister,getSmsCode,userLogin } from '@/api/api'
 }
 
 .form_box{
-    position: absolute;
-    top: 110px;
-    left:0;
-    right:0;
+    margin: 40px 0 80px 0;
     min-width: 400px;
 }
 .form_box li{

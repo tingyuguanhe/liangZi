@@ -1,5 +1,4 @@
 <template>
-  <div>
       <el-container>
         <el-main>
             <div class="banner_btn">
@@ -12,7 +11,6 @@
             </div>
         </el-main>
     </el-container>
-  </div>
 </template>
 
 <script>
@@ -34,9 +32,8 @@ export default {
 @import url("../style/common.css");
 .el-main{
     background: url('../assets/banner_new.png') center center no-repeat;
-    position: absolute;
+    position: relative;
     left: 0;
-    top: 80px;
     display: block;
     background-size: cover;
     width: 100%;

@@ -1,7 +1,4 @@
 import axios from 'axios'
-import qs from 'qs'
-import router from '@/router'
-import { Message } from 'element-ui'
 
 let api = axios.create({
     baseURL:'',

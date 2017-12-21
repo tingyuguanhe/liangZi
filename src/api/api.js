@@ -4,10 +4,11 @@ import $ from 'jquery'
 //login
 export const userRegister = (reqData) => fetch('POST','/api/register/',{data:reqData})
 //获取手机验证码
-export const getSmsCode = (param) => fetch('GET',`/api/notice/?phone=${param.phone_num}`)
+export const getSmsCode = (reqData) => fetch('POST','/api/notice/',{data: reqData})
 //login
-export const userLogin = (reqData) => fetch('POST','/api/login/',{data:reqData})
-
+export const userLogin = (reqData) => fetch('POST','/api/login/',{data: reqData})
+//图片验证码
+export const getCaptcha = () => fetch('GET','/api/captcha/')  
 //判断是否登录，个人信息
 export const checkLogin = () => fetch('GET','/api/auth_info/')
 
