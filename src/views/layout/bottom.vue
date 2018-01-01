@@ -14,8 +14,13 @@
 </template>
 <style lang="scss">
     .footer_box{
+        width: 100%;
+        position: absolute;
         background: #F2F4F6;
         height: 80px;
+        min-width:1200px;
+        left: 0;
+        bottom:0;
         .footer_logo{
             float: left;
             padding: 18px 0 0 0;

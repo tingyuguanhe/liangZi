@@ -6,6 +6,7 @@ const menu = {
     mutations:{
        set_user_name:(state, name) => {
            state.user_name = name;
+           console.log(name);
        }
         
     },
@@ -15,8 +16,10 @@ const menu = {
                 (resData) => {
                     if(resData && resData.status == 'ok'){
                         commit('set_user_name',resData.data.username);
+                        
                     }else{
-                        console.log('获取信息失败');
+                        console.log('用户未登录');
+                      
                     }
                 }
             )

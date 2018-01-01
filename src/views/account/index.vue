@@ -1,9 +1,5 @@
 <template>
   <div class="account">
-    <div class="title clearfix">
-      <img src="../../assets/tit.png" width="14%" alt="">
-    </div>
-    
     <!-- <div class="account_menu"> 
       <el-menu :default-active="activeIndex" class="el-menu-demo" mode="vertical" @select="handleSelect" background-color="transparent" text-color="#5a5e66" active-text-color="#2d8dc5">
         <el-menu-item v-for="item in menu_list" :key="item.key" :index="item.key">{{item.name}}</el-menu-item>
@@ -16,25 +12,25 @@
             <p>{{active_name}}</p>
             <el-row>
               <el-col :span="2">用户名：</el-col>  
-              <el-col :span="22">
+              <el-col :span="17">
                 {{user_info.username}}
-                <img src="../../assets/vip.png"  class="icon" width="38px"> 
+                <img src="../../assets/vip.png"  class="icon" width="32px"> 
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="2">登录时长：</el-col>  
-              <el-col :span="22"><span class="green">0</span> 小时</el-col>
+              <el-col :span="17"><span class="green">0</span> 小时</el-col>
             </el-row>
             <el-row>
               <el-col :span="2">邀请码：</el-col>  
-              <el-col :span="22">
+              <el-col :span="17">
                 <span v-if="user_info.invite_code" class="invite_color">{{user_info.invite_code}}</span>
                 <span v-else class="invite_color">暂无</span>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="2">剩余时长：</el-col>  
-              <el-col :span="22">
+              <el-col :span="17">
                 <span v-if="user_info.time">{{user_info.time}} 小时</span>
                 <span v-else class="red">暂无</span>
               </el-col>
@@ -57,10 +53,6 @@ import {checkLogin} from '@/api/api'
           {
             name:'基本信息',
             key:'base_info'
-          },
-          {
-            name:'充值记录',
-            key:'recharge_record'
           }
         ],
         active_name:'',
@@ -94,7 +86,7 @@ import {checkLogin} from '@/api/api'
               this.user_info = resData.data;
               //this.$store.dispatch('get_user_info');
             }else{
-              console.log('获取信息失败');
+              console.log('个人信息失败，未登录');
             }
           }
         )
@@ -104,21 +96,23 @@ import {checkLogin} from '@/api/api'
 </script>
 
 <style lang="scss">
+@import url("../../style/common.css");
 .account{
   padding: 20px;
-  .title{
-    img{
-      float: left;
-    }
-  }
+  min-width: 1200px;
+  box-sizing: border-box;
+  
 }
 .account_menu{
   width: 240px;
   float: left;
 }
 .account_info{
-  padding: 10px 60px;
+  padding: 0px 40px;
   text-align: left;
+  .el-row{
+    padding: 10px;
+  }
 }
 .account_content{
   background: #fff;
@@ -132,23 +126,18 @@ import {checkLogin} from '@/api/api'
     line-height: 40px;
     font-size: 18px;
   }
-  .el-row{
-    padding: 10px;
-  }
+  
   .el-col-2{
     text-align: right;
     padding: 0 10px 0 0;
+    min-width: 100px;
   }
   .green{
     color: #00ca00;
     font-weight: 600;
   }
-  .red{
-    color: #f00;
-    font-weight: 600;
-  }
   .invite_color{
-    color:#ff5900;
+    color:#f0f;
   }
 
 }

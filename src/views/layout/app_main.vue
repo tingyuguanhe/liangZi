@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="app_main">
       <nav-bar></nav-bar>
-      <transition name="el-fade-in-linear">
+      <transition name="fade" mode="out-in">
           <router-view></router-view>
       </transition>
       <btm></btm>
@@ -14,4 +14,6 @@ export default {
   components: {navBar,btm}
 }
 </script>
+
+
 

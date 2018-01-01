@@ -41,7 +41,13 @@
                             <!-- 图片验证码 -->
                             <el-form-item prop="code" class="phone_check_code">
                                 <el-input placeholder="图片验证码" v-model.number="ruleFormRegister.code"></el-input>                           
-                                <img class="code_img" :src="captcha_url">         
+                                <div class="code_img">
+                                    <img :src="captcha_url" @click="get_captcha">
+                                </div>
+                                <div class="change_one">
+                                    <a href="javascript:;" @click="get_captcha">换一张</a>
+                                </div>
+                                         
                             </el-form-item>
                             <!-- 手机验证码 -->
                             <el-form-item prop="sms_code" class="phone_check_code">
@@ -202,7 +208,7 @@ import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
         }
     },
     created () {
-       this.getCaptcha();
+       this.get_captcha();
     },
     methods: {
       handleClick(tab, event) {
@@ -238,7 +244,7 @@ import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
                         this.$router.push({name:'account'});
                     }else{
                         this.btn_loading = false;
-                        this.getCaptcha();
+                        this.get_captcha();
                         this.$message.error(resData.message);
                     }
                 }
@@ -250,7 +256,7 @@ import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
         });
       },
       //获取图片验证码
-      getCaptcha(){
+      get_captcha(){
           getCaptcha().then(
               (resData) => {
                   if(resData.status == 'ok'){
@@ -298,7 +304,6 @@ import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
             }, 1000);
         }
       },
-      
       //登录
       submitFormLogin(formName){
           this.$refs[formName].validate((valid) => {
@@ -311,7 +316,7 @@ import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
             userLogin(reqData).then(
                 (resData) => {
                     if(resData && resData.status == 'ok'){
-                        //this.$store.dispatch('get_user_info');
+                        // this.$store.dispatch('get_user_info');
                         this.$router.push({name:'account'});
                     }else{
                         this.btn_loading = false;
@@ -375,9 +380,15 @@ import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
 .code_img{
     border: 1px solid #ebedf2;
     border-radius: 4px;
-    padding: 0 50px;
+    width: 30%;
+    height: 40px;
     float: left;
-    margin: 0 0 0 25px;
+    margin: 0 0 0 5%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.change_one{
+    float: right;
 }
 .el-button--primary{
     background-color: #2c8dc6;
@@ -402,15 +413,15 @@ import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
 
 .form_box{
     margin: 40px 0 80px 0;
-    min-width: 400px;
+    min-width: 1000px;
 }
 .form_box li{
-    width: 40%;
+    width: 30%;
     list-style: none;
     float: left;
 }
 .form_box li:first-child{
-    width: 50%;
+    width: 55%;
     min-width: 500px;
     margin: 18px 0 0 0;
     position: relative;

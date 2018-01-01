@@ -6,5 +6,7 @@ html,body{
     display: block;
     content: "";
     clear: both;
-      
+}
+.red{
+    color:#f40;
 }

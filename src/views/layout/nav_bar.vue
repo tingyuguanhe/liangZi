@@ -1,5 +1,5 @@
 <template>
-  <el-header height="80px" class="clearfix">
+  <el-header height="80px" class="clearfix" :class="{is_fixed: searchBarFixed}">
         <div class="head_logo">
             <a href="javascript:;">
                 <span class="logo">
@@ -12,22 +12,21 @@
             </a>
         </div>
         <div class="head_menu clearfix"> 
-            <el-menu :default-active="activeIndex" class="el-menu-demo" @select="selectMenu"
+            <el-menu :default-active="$route.path" v-cloak class="el-menu-demo"
                 mode="horizontal"  background-color="#003265" :router="true"
                 text-color="#fff"
                 active-text-color="#d1ff00">
-                <el-menu-item v-for="item in menu_routes" v-if="!username" :key="item.name" :index="item.path" >
+                <el-menu-item v-for="item in menu_routes" v-if="!username" :key="item.name" :index="item.path">
                     <span>{{item.text}}</span>
                 </el-menu-item>
-                <el-menu-item v-for="item in menu_routes" v-if="!!username" :key="item.name" :index="item.path" >
-                    <span v-if="item.path != '/login'">{{item.text}}</span>
+                <el-menu-item v-for="item in menu_routes" v-if="!!username && item.path != '/login'" :key="item.name" :index="item.path">
+                    <span>{{item.text}}</span>
                 </el-menu-item>
                 <el-menu-item index="" v-if="!!username" @click="login_out">
                     <span>退出</span>
                 </el-menu-item>
                
-            </el-menu>
-            
+            </el-menu>  
         </div>
 </el-header>
 </template>
@@ -37,28 +36,40 @@ import {loginOut} from '@/api/api'
 export default {
   data(){
       return{
-          activeMenu:'index'
+          activeMenu:'login',
+          username:'',
+          searchBarFixed: false
       }
+  },
+  created () {
+    this.username = sessionStorage.getItem('username');  
+  },
+  mounted () {
+    window.addEventListener('scroll', this.handleScroll)
   },
   computed: {
     menu_routes () {
       return this.$router.options.routes[0].children
-    },
-    activeIndex(){
-        return this.$route.matched[1].path;
-    },
-    username(){
-        return this.$store.state.user.user_name;
     }
+    
   },
   methods: {
-    selectMenu(index,indexPath){
-        this.activeMenu = index;
+    
+    handleScroll () {
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+        var offsetTop = document.querySelector('header').offsetTop;
+        //console.log(scrollTop);
+        if (scrollTop > offsetTop) {
+            this.searchBarFixed = true
+        } else {
+            this.searchBarFixed = false
+        }
     },
     login_out(){
         loginOut().then(
             (resData) => {
                 if(resData && resData.status == 'ok'){
+                    this.username = sessionStorage.removeItem('username'); 
                     window.location.href = '/';
                 }else{
                     console.log('退出失败');
@@ -71,17 +82,16 @@ export default {
 </script>
 
 <style lang="scss">
-
-
 .el-header{
     background-color: #003265;
     color: #333;
     text-align: center;
-    
+    min-width: 1200px;
     padding:0 10px;
     overflow: hidden;
     box-shadow: 0 0 5px 0px #ccc;
     z-index: 10;
+    box-shadow: none;
     transition: all .4s ease-in;
     .head_logo{
         float: left;
@@ -107,6 +117,13 @@ export default {
         margin: 14px 0 0 0;
     }
 }
+.is_fixed{
+    position:fixed;
+    left:0;
+    top:0;
+    z-index:999;
+    width: 100%;
+}
 .head_menu{
     .el-menu--horizontal {
         float: right;
@@ -115,7 +132,7 @@ export default {
             height: 80px;
             line-height: 80px;
         }
-        li.el-menu-item:nth-child(3){
+        li.el-menu-item:last-child{
             margin-left: 100px;
         }
     }
