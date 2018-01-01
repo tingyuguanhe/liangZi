@@ -14,7 +14,10 @@ export const checkLogin = () => fetch('GET','/api/auth_info/')
 
 //充值--产品列表
 export const getProducts = () => fetch('GET','/api/pay/')
-//价格
+//支付
 export const buy = (reqData) => fetch('POST','/api/pay/',{data: reqData})
+//购买
+
+export const buyProduct = (param) => fetch('GET',`/api/pay/status/?order_id=${param.order_id}`)
 //退出
 export const loginOut = () => fetch('GET','/api/logout/')

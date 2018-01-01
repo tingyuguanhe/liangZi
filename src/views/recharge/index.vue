@@ -81,7 +81,7 @@
   </div>
 </template>
 <script>
-import {getProducts,buy} from '@/api/api'
+import {getProducts,buy,buyProduct} from '@/api/api'
   export default {
     data () {
       return {
@@ -94,7 +94,9 @@ import {getProducts,buy} from '@/api/api'
         dialogVisible: false, //订单弹框
         order_data:'',
         pay_way:'',
-        loading: true
+        loading: true,
+        has_pay: 0,
+        interval:''
       }
     },
     created () {
@@ -136,6 +138,7 @@ import {getProducts,buy} from '@/api/api'
             if(resData && resData.status == 'ok'){
               this.order_data = resData.data;
               this.loading = false;
+              this.interval = window.setInterval(this.buy_product_result, 1000*3);
             }else{
               console.log('获取价格失败');
             }
@@ -151,6 +154,23 @@ import {getProducts,buy} from '@/api/api'
         }else{
           this.pay_way = "支付宝";
         }
+      },
+      buy_product_result(){
+        var param = {
+          order_id: this.order_data.order_id
+        }
+        buyProduct(param).then(
+          (resData) => {
+            if(resData && resData.status == 'ok'){
+              this.has_pay = resData.data;
+              if(this.has_pay != 0){  //支付成功
+                window.clearInterval(this.interval);
+              }
+            }else{
+              window.clearInterval(this.interval);
+            }
+          }
+        )
       }
     }
   }
@@ -239,6 +259,11 @@ import {getProducts,buy} from '@/api/api'
       }
       .pay_money{
         font-size: 16px;
+      }
+    }
+    .dialog-footer {
+      button{
+        width: 100px;
       }
     }
   }
