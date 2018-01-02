@@ -98,7 +98,7 @@ import {checkLogin} from '@/api/api'
 <style lang="scss">
 @import url("../../style/common.css");
 .account{
-  padding: 20px;
+  padding: 80px 20px 20px 20px;
   min-width: 1200px;
   box-sizing: border-box;
   

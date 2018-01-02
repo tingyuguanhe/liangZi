@@ -8,7 +8,7 @@
             量子账号：
           </el-col>
           <el-col :span="18">
-            <div>ytryytytrytrytrytytuyty</div> 
+            <div>{{username}}</div> 
           </el-col>
         </el-row>
         <el-row>
@@ -56,28 +56,36 @@
     </el-row>
       <!-- 订单详情 -->
     <el-dialog title="充值订单详情" class="order_detail_dialog" :visible.sync="dialogVisible" width="50%">
-    <el-row v-loading="loading" element-loading-text="订单生成中。。。">
-      <el-col :span="9">
-        <div style="text-align:center;">
-          <img :src="order_data.scan_url" alt="二维码">
-          <el-button type="primay">
-            <span>{{pay_way}}扫描支付</span>
-          </el-button>
-        </div>
-        
-      </el-col>
-      <el-col :span="15">
-        <p><label>订单编号：</label>{{order_data.order_id}}</p>
-        <p><label>充值账号：</label>{{order_data.customer}}</p>
-        <p><label>充值时长：</label>{{order_data.time}}天</p>
-        <p><label>支付金额：</label><b class="red pay_money">¥{{order_data.money}}</b></p>
-      </el-col>
-    </el-row>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-    </span>
-  </el-dialog>
+      <el-row v-if="has_pay == 0" v-loading="loading" element-loading-text="订单生成中。。。">
+        <el-col :span="9">
+          <div style="text-align:center;">
+            <img :src="order_data.scan_url" alt="二维码">
+            <el-button type="primay">
+              <span>{{pay_way}}扫描支付</span>
+            </el-button>
+          </div>
+        </el-col>
+        <el-col :span="15">
+          <p><label>订单编号：</label>{{order_data.order_id}}</p>
+          <p><label>充值账号：</label>{{order_data.customer}}</p>
+          <p><label>充值时长：</label>{{order_data.time}}天</p>
+          <p><label>支付金额：</label><b class="red pay_money">¥ {{order_data.money}}</b></p>
+        </el-col>
+      </el-row>
+      <el-row v-if="has_pay == 1" class="pay_success">
+        <el-col :span="24">
+          您已支付成功！
+        </el-col>
+      </el-row>
+      <el-row v-if="has_pay == 2" class="pay_fail">
+        <el-col :span="24">
+          支付超时，点击 <a href="javascript:;" @click="buy_product">重新支付</a>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancel_pay">取 消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -95,12 +103,14 @@ import {getProducts,buy,buyProduct} from '@/api/api'
         order_data:'',
         pay_way:'',
         loading: true,
-        has_pay: 0,
-        interval:''
+        has_pay: 0,   //支付结果
+        interval:'',
+        username:''
       }
     },
     created () {
       this.get_products();
+      this.username = sessionStorage.getItem('username');  
     },
     methods: {
       get_products(){
@@ -171,6 +181,11 @@ import {getProducts,buy,buyProduct} from '@/api/api'
             }
           }
         )
+      },
+      cancel_pay(){
+        window.clearInterval(this.interval);
+        this.dialogVisible = false;
+
       }
     }
   }
@@ -178,7 +193,7 @@ import {getProducts,buy,buyProduct} from '@/api/api'
 <style lang="scss">
 @import url("../../style/common.css");
 .recharge{
-  padding: 20px;
+  padding: 80px 20px 20px 20px;
   min-width: 1200px;
   .recharge_info{
     padding: 0 40px 40px 40px;
@@ -267,6 +282,21 @@ import {getProducts,buy,buyProduct} from '@/api/api'
       }
     }
   }
+  
+}
+.pay_success{
+  color: #4fc300;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  padding: 50px;
+}
+.pay_fail{
+  color: #f40;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  padding: 50px;
 }
 </style>
 

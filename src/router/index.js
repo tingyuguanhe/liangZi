@@ -77,7 +77,7 @@ router.beforeEach((to, from, next) => {
   
   console.log(to.path);
   //需要登录
-  if(!!to.meta.requireAuth) {
+  
     document.title = to.meta.title;
     // 这个路由需要auth,检验是否登录了.
     checkLogin().then(
@@ -103,10 +103,7 @@ router.beforeEach((to, from, next) => {
     }
   )
    
-  }else{
-    next();
-  }
-
+ 
   
   
 })

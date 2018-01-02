@@ -15,7 +15,7 @@
             <el-menu :default-active="$route.path" v-cloak class="el-menu-demo"
                 mode="horizontal"  background-color="#003265" :router="true"
                 text-color="#fff"
-                active-text-color="#d1ff00">
+                active-text-color="#cf6">
                 <el-menu-item v-for="item in menu_routes" v-if="!username" :key="item.name" :index="item.path">
                     <span>{{item.text}}</span>
                 </el-menu-item>
@@ -43,9 +43,10 @@ export default {
   },
   created () {
     this.username = sessionStorage.getItem('username');  
+    
   },
   mounted () {
-    window.addEventListener('scroll', this.handleScroll)
+    //window.addEventListener('scroll', this.handleScroll)
   },
   computed: {
     menu_routes () {
@@ -86,6 +87,7 @@ export default {
     background-color: #003265;
     color: #333;
     text-align: center;
+    width: 100%;
     min-width: 1200px;
     padding:0 10px;
     overflow: hidden;
@@ -93,6 +95,7 @@ export default {
     z-index: 10;
     box-shadow: none;
     transition: all .4s ease-in;
+    position: fixed;
     .head_logo{
         float: left;
         width: 258px;
@@ -100,21 +103,20 @@ export default {
     .logo_text{
         float: left;
         color: #fff;
-        padding: 16px 0 0 10px;
-        width: 160px;
+        padding: 23px 0 0 10px;
+        width: 146px;
         text-align: center;
-        
         .logo_ip{
-            font-size: 14px;
+            font-size: 13px;
         }
     }
     
     .logo{
-        width: 50px;
+        width: 40px;
         height: 50px;
         float: left;
         background-size: cover;
-        margin: 14px 0 0 0;
+        margin: 22px 0 0 0;
     }
 }
 .is_fixed{

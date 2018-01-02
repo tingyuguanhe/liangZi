@@ -56,9 +56,12 @@ export default {
 
 <style lang="scss">
 @import url("../style/common.css");
+.mian_content{
+    padding: 80px 0 0 0;
+}
 .banner{
-    background: url('../assets/banner_new.png') center center no-repeat;
-    background-size: cover;
+    background: url('../assets/banner_new.png') center center no-repeat, linear-gradient(#013266, #000f20);
+    //background-size: cover;
     width: 100%;
     height: 746px;
     overflow: hidden;
@@ -79,7 +82,7 @@ export default {
 }
 
 .intro{
-    padding: 0 80px;
+    padding: 50px 80px;
     margin: 50px 0;
 }
 .wd{
