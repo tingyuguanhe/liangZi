@@ -56,14 +56,12 @@ export default {
 
 <style lang="scss">
 @import url("../style/common.css");
-.mian_content{
-    padding: 20px 0 0 0;
-}
+
 .banner{
     background: url('../assets/banner.jpg') center center no-repeat, linear-gradient(#013266, #000f20);
     //background-size: cover;
     width: 100%;
-    height: 746px;
+    height: 730px;
     overflow: hidden;
 }
 .banner_btn{

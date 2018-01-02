@@ -46,7 +46,7 @@ export default {
     
   },
   mounted () {
-    //window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener('scroll', this.handleScroll)
   },
   computed: {
     menu_routes () {
@@ -55,7 +55,6 @@ export default {
     
   },
   methods: {
-    
     handleScroll () {
         var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
         var offsetTop = document.querySelector('header').offsetTop;
@@ -95,7 +94,7 @@ export default {
     z-index: 10;
     box-shadow: none;
     transition: all .4s ease-in;
-    position: fixed;
+   
     .head_logo{
         float: left;
         width: 258px;
@@ -125,6 +124,15 @@ export default {
     top:0;
     z-index:999;
     width: 100%;
+    animation: show_header 1s;
+}
+
+@keyframes show_header{
+    0%{ top:-50px; opacity: 0;}
+    30%{ top:-20px; opacity: 0.3;}
+    60%{ top:-5px; opacity: 0.6;}
+    100%{ top:0px; opacity: 1;}
+
 }
 .head_menu{
     .el-menu--horizontal {

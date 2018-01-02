@@ -193,7 +193,7 @@ import {getProducts,buy,buyProduct} from '@/api/api'
 <style lang="scss">
 @import url("../../style/common.css");
 .recharge{
-  padding: 80px 20px 20px 20px;
+  padding: 10px 20px 20px 20px;
   min-width: 1200px;
   .recharge_info{
     padding: 0 40px 40px 40px;

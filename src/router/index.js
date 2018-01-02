@@ -4,6 +4,9 @@ import HelloWorld from '@/components/HelloWorld'
 import store from '@/store'
 import {checkLogin} from '@/api/api'
 import { Message } from 'element-ui'
+import NProgress from 'nprogress' // Progress 进度条
+import 'nprogress/nprogress.css'// Progress 进度条样式
+
 Vue.use(Router)
 
 const layout = () => import('@/views/layout/app_main')
@@ -74,8 +77,8 @@ const router = new Router({
 
 
 router.beforeEach((to, from, next) => {
-  
-  console.log(to.path);
+  NProgress.start()
+  //console.log(to.path);
   //需要登录
   
     document.title = to.meta.title;
@@ -87,6 +90,7 @@ router.beforeEach((to, from, next) => {
       if(resData.status == 'ok'){  
         sessionStorage.setItem('username', resData.data.username);
         next();
+        NProgress.done()
       }else{  //未登录    
         if(to.path == '/account' || to.path == '/recharge'){
 
@@ -98,6 +102,7 @@ router.beforeEach((to, from, next) => {
         })  
         }else{
           next();
+          NProgress.done()
         }   
       }    
     }
