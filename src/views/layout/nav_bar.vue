@@ -37,20 +37,19 @@ export default {
   data(){
       return{
           activeMenu:'login',
-          username:'',
           searchBarFixed: false
       }
   },
-  created () {
-    this.username = sessionStorage.getItem('username');  
-    
-  },
+  
   mounted () {
     window.addEventListener('scroll', this.handleScroll)
   },
   computed: {
     menu_routes () {
       return this.$router.options.routes[0].children
+    },
+    username(){
+      return this.$store.state.user.user_name;  
     }
     
   },
@@ -66,14 +65,9 @@ export default {
         }
     },
     login_out(){
-        loginOut().then(
-            (resData) => {
-                if(resData && resData.status == 'ok'){
-                    this.username = sessionStorage.removeItem('username'); 
-                    window.location.href = '/';
-                }else{
-                    console.log('退出失败');
-                }
+        this.$store.dispatch('login_out').then(
+            () => {
+                location.reload() // 为了重新实例化vue-router对象 避免bug
             }
         )
     }
@@ -124,13 +118,13 @@ export default {
     top:0;
     z-index:999;
     width: 100%;
-    animation: show_header 1s;
+    animation: show_header .5s;
 }
 
 @keyframes show_header{
-    0%{ top:-50px; opacity: 0;}
-    30%{ top:-20px; opacity: 0.3;}
-    60%{ top:-5px; opacity: 0.6;}
+    0%{ top:-15px; opacity: 0;}
+    30%{ top:-10px; opacity: 0.5;}
+    60%{ top:-5px; opacity: 0.8;}
     100%{ top:0px; opacity: 1;}
 
 }

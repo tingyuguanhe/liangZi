@@ -51,7 +51,7 @@
                             </el-form-item>
                             <!-- 手机验证码 -->
                             <el-form-item prop="sms_code" class="phone_check_code">
-                                <el-input placeholder="手机验证码" v-model.number="ruleFormRegister.sms_code"></el-input>
+                                <el-input placeholder="手机验证码" v-model.number="ruleFormRegister.sms_code" @keyup.enter.native="submitFormRegister('ruleFormRegister')"></el-input>
                                 <el-button type="primary" @click="get_sms_code" v-if="!sendMsgDisabled" >
                                     获取手机验证码
                                 </el-button>
@@ -78,7 +78,7 @@
                                 <el-input type="text" placeholder="量子账号" v-model.trim="ruleFormLogin.username" auto-complete="off"></el-input>
                             </el-form-item>
                             <el-form-item prop="login_pass">
-                                <el-input type="password" placeholder="密码" v-model.trim="ruleFormLogin.login_pass" auto-complete="off"></el-input>
+                                <el-input type="password" placeholder="密码" v-model.trim="ruleFormLogin.login_pass" @keyup.enter.native="submitFormLogin('ruleFormLogin')" auto-complete="off"></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" v-if="!btn_loading" @click="submitFormLogin('ruleFormLogin')">登录</el-button>
@@ -365,7 +365,7 @@ import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
 }
 .el-tabs__item{
     padding: 0 15px;
-    font-size: 18px;
+    font-size: 16px;
 }
 .el-tabs__active-bar,.el-tabs__nav-wrap::after{
     height: 0;

@@ -79,37 +79,49 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   NProgress.start()
   //console.log(to.path);
-  //需要登录
+
   
     document.title = to.meta.title;
-    // 这个路由需要auth,检验是否登录了.
-    checkLogin().then(
-    (resData) => {
-      //已登录
-      sessionStorage.removeItem('username'); 
-      if(resData.status == 'ok'){  
-        sessionStorage.setItem('username', resData.data.username);
-        next();
-        NProgress.done()
-      }else{  //未登录    
-        if(to.path == '/account' || to.path == '/recharge'){
 
-        window.location.href='/login';
-        Message({
-          showClose: true,
-          message: '请先登录',
-          type: 'error'
-        })  
-        }else{
+    // 这个路由需要auth,检验是否登录了.
+    store.dispatch('get_user_info').then(
+      (resData) => {   // 获取用户登录状态及个人信息
+        //已登录
+        sessionStorage.removeItem('username'); 
+        if(resData.status == 'ok'){  
+          sessionStorage.setItem('username', resData.data.username);
           next();
           NProgress.done()
-        }   
-      }    
-    }
-  )
-   
- 
-  
-  
+        }else{  //未登录    
+          if(to.path == '/account' || to.path == '/recharge'){
+
+          window.location.href='/login';
+          Message({
+            showClose: true,
+            message: '请先登录',
+            type: 'error'
+          })  
+          }else{
+            next();
+            NProgress.done()
+          }   
+        }    
+      }
+    ).catch( () => {
+      store.dispatch('fed_log_out').then(
+        () => {
+          Message.error('验证失败，请重新登录'); 
+          next({ path:'/login' })
+        }
+      )
+    })
+
 })
+
+router.afterEach(() => {
+  NProgress.done() // 结束Progress
+})
+
+
+
 export default router
