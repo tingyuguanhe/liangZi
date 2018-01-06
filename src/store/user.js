@@ -1,12 +1,15 @@
 import { checkLogin,loginOut } from '@/api/api'
 const menu = {
     state:{
-       user_name:''
+       user_name:'',
+       download_url:''
     },
     mutations:{
        SET_USER_NAME:(state, name) => {
-           state.user_name = name;
-           //console.log(name);
+            state.user_name = name; 
+       },
+       SET_DOWNLOAD_URL:(state, url) => {
+            state.download_url = url
        }
         
     },
@@ -15,6 +18,7 @@ const menu = {
             return new Promise((resolve, reject) => {
                 checkLogin().then(
                     (resData) => {
+                        commit('SET_DOWNLOAD_URL', resData.data.download);
                         if(resData && resData.status == 'ok'){
                             commit('SET_USER_NAME',resData.data.username);
                             resolve(resData);

@@ -4,8 +4,8 @@
             
                 <div class="banner_btn">
                     <!-- <img src="../assets/banner_text.png" width="320px" alt=""> -->
-                    <div class="download_btn" @click="downLoad">
-                        <a href="http://quantom.internmate.com/QuantomInstaller.exe" download="QuantomInstaller.exe">
+                    <div class="download_btn">
+                        <a :href="down_load_url" download="QuantomInstaller.exe">
                             <img src="../assets/banner_btn.png" width="100%" alt="">
                         </a>
                     </div>
@@ -43,13 +43,11 @@
 export default {
     data(){
         return{
-
+            down_load_url:''
         }
     },
-    methods: {
-        downLoad(){
-
-        }
+    created () {
+        this.down_load_url = this.$store.state.user.download_url;
     }
 }
 </script>
@@ -63,12 +61,13 @@ export default {
     width: 100%;
     height: 730px;
     overflow: hidden;
+    position: relative;
 }
 .banner_btn{
     position: absolute;
     left: 50%;
     margin-left: -145px;
-    top: 600px;
+    top: 530px;
     cursor: pointer;
     img{
         border-radius: 150px;

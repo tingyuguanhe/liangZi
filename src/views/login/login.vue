@@ -9,7 +9,7 @@
                 <img src="../../assets/banner_text.png" width="40%" alt="">
             </div>
             <div>
-                <a href="http://quantom.internmate.com/QuantomInstaller.exe" download="QuantomInstaller.exe">
+                <a :href="down_load_url" download="QuantomInstaller.exe">
                     <img src="../../assets/new_down.png" width="28%">
                 </a>
             </div>
@@ -180,7 +180,8 @@ import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
         sms_btn_loading: false,
         time: 180, // 发送验证码倒计时
         sendMsgDisabled: false,
-        captcha_url:''
+        captcha_url:'',
+        down_load_url:''
       };
     },
     
@@ -208,6 +209,7 @@ import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
         }
     },
     created () {
+       this.down_load_url = this.$store.state.user.download_url;
        this.get_captcha();
     },
     methods: {
