@@ -83,7 +83,8 @@
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="cancel_pay">取 消</el-button>
+        <el-button v-if="has_pay == 1" @click="cancel_pay_to_account">取 0000消</el-button> 
+        <el-button v-else @click="cancel_pay">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -185,7 +186,10 @@ import {getProducts,buy,buyProduct} from '@/api/api'
       cancel_pay(){
         window.clearInterval(this.interval);
         this.dialogVisible = false;
-
+      },
+      cancel_pay_to_account(){
+        this.dialogVisible = false;
+        this.$router.push({path: '/account'})
       }
     }
   }
