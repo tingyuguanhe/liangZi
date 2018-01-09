@@ -31,7 +31,7 @@
             <el-row>
               <el-col :span="2">剩余时长：</el-col>  
               <el-col :span="17">
-                <span v-if="user_info.time">{{user_info.time}} 小时</span>
+                <span v-if="user_info.time">{{user_info.time}} 天</span>
                 <span v-else class="red">暂无</span>
               </el-col>
             </el-row>
