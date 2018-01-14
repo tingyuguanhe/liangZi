@@ -56,6 +56,7 @@
     </el-row>
       <!-- 订单详情 -->
     <el-dialog title="充值订单详情" class="order_detail_dialog" :visible.sync="dialogVisible" width="50%">
+       <!-- has_pay == 1 未支付 -->
       <el-row v-if="has_pay == 0" v-loading="loading" element-loading-text="订单生成中。。。">
         <el-col :span="9">
           <div style="text-align:center;">
@@ -72,18 +73,20 @@
           <p><label>支付金额：</label><b class="red pay_money">¥ {{order_data.money}}</b></p>
         </el-col>
       </el-row>
+      <!-- has_pay == 1 支付成功 -->
       <el-row v-if="has_pay == 1" class="pay_success">
         <el-col :span="24">
           您已支付成功！
         </el-col>
       </el-row>
+       <!-- has_pay == 1 支付超时 -->
       <el-row v-if="has_pay == 2" class="pay_fail">
         <el-col :span="24">
           支付超时，点击 <a href="javascript:;" @click="buy_product">重新支付</a>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button v-if="has_pay == 1" @click="cancel_pay_to_account">取 0000消</el-button> 
+        <el-button v-if="has_pay == 1" @click="cancel_pay_to_account">取 消</el-button> 
         <el-button v-else @click="cancel_pay">取 消</el-button>
       </span>
     </el-dialog>
@@ -189,6 +192,7 @@ import {getProducts,buy,buyProduct} from '@/api/api'
       },
       cancel_pay_to_account(){
         this.dialogVisible = false;
+        window.clearInterval(this.interval);
         this.$router.push({path: '/account'})
       }
     }
@@ -197,7 +201,7 @@ import {getProducts,buy,buyProduct} from '@/api/api'
 <style lang="scss">
 @import url("../../style/common.css");
 .recharge{
-  padding: 10px 20px 20px 20px;
+  padding: 10px 20px 80px 20px;
   min-width: 1200px;
   .recharge_info{
     padding: 0 40px 40px 40px;

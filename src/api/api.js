@@ -17,7 +17,13 @@ export const getProducts = () => fetch('GET','/api/pay/')
 //支付
 export const buy = (reqData) => fetch('POST','/api/pay/',{data: reqData})
 //购买
-
 export const buyProduct = (param) => fetch('GET',`/api/pay/status/?order_id=${param.order_id}`)
+//提现
+export const getMoney = (reqData) => fetch('POST','/api/customer/extra/money/',{data: reqData})
+//提现记录
+export const getMoneyList = () => fetch('GET','/api/customer/extra/money/')
+//充值记录
+export const getOrderList = () => fetch('GET','/api/orders/')
+
 //退出
 export const loginOut = () => fetch('GET','/api/logout/')

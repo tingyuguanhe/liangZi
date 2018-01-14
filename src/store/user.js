@@ -2,7 +2,8 @@ import { checkLogin,loginOut } from '@/api/api'
 const menu = {
     state:{
        user_name:'',
-       download_url:''
+       download_url:'',
+       extra_money:''
     },
     mutations:{
        SET_USER_NAME:(state, name) => {
@@ -10,6 +11,9 @@ const menu = {
        },
        SET_DOWNLOAD_URL:(state, url) => {
             state.download_url = url
+       },
+       SET_MONEY: (state, money) => {
+        state.extra_money = money
        }
         
     },
@@ -21,6 +25,7 @@ const menu = {
                         commit('SET_DOWNLOAD_URL', resData.data.download);
                         if(resData && resData.status == 'ok'){
                             commit('SET_USER_NAME',resData.data.username);
+                            commit('SET_MONEY', resData.data.extra_money);
                             resolve(resData);
                         }else{
                             //console.log('用户未登录');

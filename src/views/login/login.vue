@@ -52,7 +52,7 @@
                             <!-- 手机验证码 -->
                             <el-form-item prop="sms_code" class="phone_check_code">
                                 <el-input placeholder="手机验证码" v-model.number="ruleFormRegister.sms_code" @keyup.enter.native="submitFormRegister('ruleFormRegister')"></el-input>
-                                <el-button type="primary" @click="get_sms_code" v-if="!sendMsgDisabled" >
+                                <el-button type="primary" @click="get_sms_code" v-if="!sendMsgDisabled">
                                     获取手机验证码
                                 </el-button>
                                 <el-button type="primary" v-if="sendMsgDisabled" :loading="true">{{time+'秒后重新获取'}}</el-button>
@@ -240,9 +240,7 @@ import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
             };
             userRegister(reqData).then(
                 (resData) => {
-                    console.log(resData);
                     if(resData.status == 'ok'){
-                        //this.$store.dispatch('get_user_info');
                         this.$router.push({name:'account'});
                     }else{
                         this.btn_loading = false;
@@ -292,8 +290,10 @@ import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
                 (resData) => {
                     if(resData && resData.status == 'ok'){
                         me.$message.success('手机验证码已下发，请注意查收');
+                    }else{
+                        console.log('验证码下发失败');
                     }
-                    console.log('手机验证码',resData);
+                    //console.log('手机验证码',resData);
                 }
             )
             me.sendMsgDisabled = true;
@@ -338,7 +338,7 @@ import { userRegister,getSmsCode,userLogin,getCaptcha } from '@/api/api'
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import url("../../style/common.css");
 .tip{
     height: 24px;
