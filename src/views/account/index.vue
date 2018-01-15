@@ -86,9 +86,11 @@
                    >
                   </el-table-column>
                   <el-table-column
-                    prop="pay_type"
                     label="提现方式"
                     >
+                     <template slot-scope="scope">
+                      <span style="margin-left: 10px" v-if="scope.row.pay_type == 'ali'">支付宝</span>
+                    </template>
                   </el-table-column>
                   <el-table-column
                     label="提现金额"
