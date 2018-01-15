@@ -91,13 +91,25 @@
                     >
                   </el-table-column>
                   <el-table-column
-                    prop="money"
                     label="提现金额"
                     >
+                    <template slot-scope="scope">
+                      <span style="margin-left: 10px">{{ scope.row.money }}元</span>
+                    </template>
                   </el-table-column>
                   <el-table-column
-                    prop="times"
-                    label="提现">
+                    label="提现人姓名"
+                    >
+                    <template slot-scope="scope">
+                      <span style="margin-left: 10px">{{ scope.row.username }}</span>
+                    </template>
+                  </el-table-column>
+                  
+                  <el-table-column
+                    label="提现时长">
+                    <template slot-scope="scope">
+                      <span style="margin-left: 10px">{{ scope.row.times }}天</span>
+                    </template>
                   </el-table-column>
                 </el-table>
               </div>
@@ -131,11 +143,11 @@
         </el-col>
       </el-row>
 
-      <el-dialog  title="提示" :visible.sync="dialogVisible"  width="50%">
+      <el-dialog  title="提现详情" :visible.sync="dialogVisible"  width="50%">
         <ul class="get_money_dialog">
           <li>
             <label for="">提现金额：</label>
-            <span>{{extra_money}}</span>
+            <span class="can_get_money">{{extra_money}}</span> 元
           </li>
           <li>
             <label for="">支付宝账号：</label>
@@ -409,11 +421,7 @@ import {checkLogin,getMoney,getMoneyList,getSmsCode,getCaptcha,getOrderList} fro
     border-radius: 5px;
     padding: 20px;
   }
-  .can_get_money{
-    color:#25c10e;
-    font-weight: 600;
-    font-size: 18px;
-  }
+  
   
   .image_code{
     .el-input{
@@ -478,5 +486,10 @@ import {checkLogin,getMoney,getMoneyList,getSmsCode,getCaptcha,getOrderList} fro
     }
   }
 }
+.can_get_money{
+    color:#25c10e;
+    font-weight: 600;
+    font-size: 18px;
+  }
 </style>
 
