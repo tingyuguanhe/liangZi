@@ -176,7 +176,7 @@ import {checkLogin,getMoney,getMoneyList,getSmsCode,getCaptcha,getOrderList} fro
       };
 
       return {
-        dialogVisible: false,
+        dialogVisible: false,   //确认购买弹框
         activeName: 'userInfos',
         activeIndex: 'base_info',
         menu_list:[
@@ -324,9 +324,11 @@ import {checkLogin,getMoney,getMoneyList,getSmsCode,getCaptcha,getOrderList} fro
         getMoney(reqData).then(
           (resData) => {
             if(resData && resData.status == 'ok'){
+              this.dialogVisible = false;
               this.$message.success(resData.message);
               this.get_money_list();
             }else{
+              this.dialogVisible = false;
               this.$message.error(resData.message);
             }
           }
