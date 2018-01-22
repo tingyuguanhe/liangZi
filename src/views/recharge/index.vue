@@ -24,7 +24,7 @@
           <el-col :span="18">
             <div class="radio_btn btn_items">
               <el-radio v-for="(item,index) in pay_items" :key="index" v-model="recharge_time" :label="item.id" border @change="change_product(item)">
-                <span>{{item.time}}天</span>
+                <span>{{item.time}} {{unit}}</span>
                 <span>{{item.money}}元</span>
               </el-radio>
             </div>
@@ -69,7 +69,7 @@
         <el-col :span="15">
           <p><label>订单编号：</label>{{order_data.order_id}}</p>
           <p><label>充值账号：</label>{{order_data.customer}}</p>
-          <p><label>充值时长：</label>{{order_data.time}}天</p>
+          <p><label>充值时长：</label>{{order_data.time}} {{unit}}</p>
           <p><label>支付金额：</label><b class="red pay_money">¥ {{order_data.money}}</b></p>
         </el-col>
       </el-row>
@@ -97,6 +97,7 @@ import {getProducts,buy,buyProduct} from '@/api/api'
   export default {
     data () {
       return {
+        unit:'个月',
         recharge_time: 1,
         recharge_type:'lz_vip',
         recharge_way:'WXPAY',
