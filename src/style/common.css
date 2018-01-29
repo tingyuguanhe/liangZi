@@ -13,3 +13,8 @@ html,body{
 .el-dialog__body{
     padding: 0px 20px;
 }
+.content{
+    padding: 10px 20px 20px 20px;
+  min-width: 1200px;
+  box-sizing: border-box;
+}

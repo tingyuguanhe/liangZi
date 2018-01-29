@@ -1,5 +1,5 @@
 <template>
-  <div class="account">
+  <div class="account content">
       <el-row class="account_box">
         <el-col :span="24" class="account_info">
           <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -392,13 +392,7 @@ import {checkLogin,getMoney,getMoneyList,getSmsCode,getCaptcha,getOrderList} fro
 </script>
 
 <style lang="scss">
-@import url("../../style/common.css");
-.account{
-  padding: 10px 20px 20px 20px;
-  min-width: 1200px;
-  box-sizing: border-box;
-  
-}
+
 .account_menu{
   width: 240px;
   float: left;

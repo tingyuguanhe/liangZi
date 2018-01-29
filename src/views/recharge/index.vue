@@ -1,5 +1,5 @@
 <template>
-  <div class="recharge">
+  <div class="recharge content">
     <el-row>
       <el-col :span="24" class="recharge_info">
         <p class="title">账号充值</p>
@@ -200,10 +200,8 @@ import {getProducts,buy,buyProduct} from '@/api/api'
   }
 </script>
 <style lang="scss">
-@import url("../../style/common.css");
 .recharge{
-  padding: 10px 20px 80px 20px;
-  min-width: 1200px;
+  
   .recharge_info{
     padding: 0 40px 40px 40px;
     text-align: left;

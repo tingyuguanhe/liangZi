@@ -27,3 +27,6 @@ export const getOrderList = () => fetch('GET','/api/orders/')
 
 //退出
 export const loginOut = () => fetch('GET','/api/logout/')
+
+//反馈信息
+export const uploadSuggest = (reqData) => fetch('POST','/api/customer/suggest/',{data: reqData})

@@ -16,6 +16,9 @@ const login = () => import('@/views/login/login')
 const account = () => import('@/views/account/index')
 const recharge = () => import('@/views/recharge/index')
 
+const contactUs = () => import('@/views/contact/index')
+
+
 
 const router = new Router({
   mode:'history',
@@ -59,6 +62,16 @@ const router = new Router({
           meta:{
             title:'个人中心',
             requireAuth: true, // 添加该字段，表示进入这个路由是需要登录的
+          }
+        },
+        {
+          path: '/contact',
+          name: 'contact',
+          component: contactUs,
+          text:'联系我们',
+          meta:{
+            title:'联系我们',
+            requireAuth: false, // 添加该字段，表示进入这个路由是需要登录的
           }
         },
         {
