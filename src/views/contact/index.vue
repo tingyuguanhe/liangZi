@@ -107,7 +107,7 @@ import {uploadSuggest} from '@/api/api'
               }
             )
           } else {
-            console.log('error submit!!');
+            //console.log('error submit!!');
             return false;
           }
         });
@@ -117,18 +117,16 @@ import {uploadSuggest} from '@/api/api'
       },
       handleRemove(file, fileList) {
         var remove_img_uid = file.uid;
-        
-        
         for(var i = 0;i< this.imgs_url.length; i++){
           if(remove_img_uid == this.imgs_url[i].uid){
-            console.log(remove_img_uid);
+            //console.log(remove_img_uid);
             this.imgs_url.splice(i, 1);
           }
         }
-        console.log(this.imgs_url);
+        //console.log(this.imgs_url);
       },
       handlePreview(file) {
-        console.log(file);
+        //console.log(file);
       },
       handleChange(file,fileList){
         this.fils_list = fileList;
