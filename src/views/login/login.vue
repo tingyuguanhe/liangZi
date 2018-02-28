@@ -9,7 +9,7 @@
                 <img src="../../assets/banner_text.png" width="40%" alt="">
             </div>
             <div>
-                <a :href="down_load_url" download="QuantomInstaller.exe">
+                <a :href="down_load_url" download="QuantumInstaller.exe">
                     <img src="../../assets/new_down.png" width="28%">
                 </a>
             </div>

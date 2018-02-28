@@ -5,7 +5,7 @@
                 <div class="banner_btn">
                     <!-- <img src="../assets/banner_text.png" width="320px" alt=""> -->
                     <div class="download_btn">
-                        <a :href="down_load_url" download="QuantomInstaller.exe">
+                        <a :href="down_load_url" download="QuantumInstaller.exe">
                             <img src="../assets/banner_btn.png" width="100%" alt="">
                         </a>
                     </div>

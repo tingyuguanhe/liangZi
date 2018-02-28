@@ -7,7 +7,7 @@
                 </span>
                 <div class="logo_text">
                     <img src="../../assets/logo_name.png" width="100%" alt="">  
-                    <span class="logo_ip">quantom.internmate.com</span>
+                    <span class="logo_ip">quantum.internmate.com</span>
                 </div>
             </a>
         </div>
